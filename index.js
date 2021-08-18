@@ -9,7 +9,7 @@ const userRoutes = require("./routes/user.routes.js");
 //Making express app
 const app = express();
 //Providing Port
-const PORT = 3000;
+const PORT = process.env.PORT || 8080;
 
 //parse requests of content type-application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
