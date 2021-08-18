@@ -25,7 +25,7 @@ exports.placeOrder = (req, res) => {
     address: req.body.address,
     phone: req.body.phone,
     quantity: req.body.quantity,
-    pizzaId: req.params.pizzas,
+    // pizzaId: req.params.pizzas,
   });
   console.log(order);
   //Save order to database

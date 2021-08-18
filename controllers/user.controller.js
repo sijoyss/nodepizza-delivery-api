@@ -1,5 +1,7 @@
 const User = require("../models/user.model.js");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 
 //Retrieve all users
 exports.getallUsers = (req, res) => {
@@ -48,7 +50,7 @@ exports.registerUser = (req, res) => {
       }
     })
     .catch((err) => {
-      return res.status(500).send({
+      res.status(500).send({
         Error: "Something Went worng",
       });
     });
@@ -57,20 +59,26 @@ exports.registerUser = (req, res) => {
 exports.login = (req, res) => {
   const phone = req.body.phone;
   const password = req.body.password;
-  // if (!phone || !password) {
-  //   return res.status(400).send({
-  //     Error: "Please fill all required fields",
-  //   });
-  // }
+  if (!phone || !password) {
+    return res.status(400).send({
+      Error: "Please fill all required fields",
+    });
+  }
   User.findOne({ phone: req.body.phone }).then((user) => {
     if (user) {
       bcrypt
         .compare(password, user.password)
-        .then((user) => {
-          if (!user) {
-            return res.send({ Msg: "Password Dont Match" });
+        .then((data) => {
+          if (data) {
+            const accesstoken = jwt.sign({ user: user }, "secret", {
+              expiresIn: "1h",
+            });
+            console.log(accesstoken);
+            res
+              .status(200)
+              .send({ Message: "Logged In", accesstoken: accesstoken });
           } else {
-            return res.status(200).send({ Msg: "Logged In" });
+            return res.status(400).send({ Message: "Password Dont Match" });
           }
         })
         .catch((err) => {
