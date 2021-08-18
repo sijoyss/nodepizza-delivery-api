@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 //Retreive all order from the database
 exports.getallOrders = (req, res) => {
   Order.find()
+    .populate("pizza")
     .then((order) => {
       res.send(order);
     })
@@ -20,16 +21,19 @@ exports.placeOrder = (req, res) => {
       Error: "Please fill all required fields",
     });
   }
+  const pizza = req.body.pizza;
   const order = new Order({
     customer_name: req.body.customer_name,
     address: req.body.address,
     phone: req.body.phone,
     quantity: req.body.quantity,
-    // pizzaId: req.params.pizzas,
+    pizzaId: pizza,
   });
-  console.log(order);
+  // console.log(order);
   //Save order to database
+
   order
+    // .populate("pizza")
     .save()
     .then((data) => {
       res.send(data);
