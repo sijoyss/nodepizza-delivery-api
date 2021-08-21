@@ -1,5 +1,4 @@
 const Order = require("../models/order.model.js");
-const mongoose = require("mongoose");
 //Retreive all order from the database
 exports.getallOrders = (req, res) => {
   Order.find()
